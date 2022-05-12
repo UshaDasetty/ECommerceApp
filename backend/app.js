@@ -7,7 +7,7 @@ app.use(express.json());
 
 
 // Middleware for errors
-app.use(errorMiddleware)
+app.use(errorMiddleware);
 
 // Base routes for Product
 app.use('/api/v1', product);

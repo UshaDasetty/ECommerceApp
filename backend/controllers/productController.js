@@ -24,7 +24,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
         success: true,
         products,
         productCount,
-    })
+    });
 });
 
 // get product details
@@ -38,7 +38,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         product
-    })
+    });
 });
 
 //Update Product---> admin
@@ -58,7 +58,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         product
-    })
+    });
 });
 
 // Delete product---> admin
@@ -74,5 +74,5 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: 'Product deleted successfully'
-    })
+    });
 });

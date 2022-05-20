@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'); 
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -46,9 +47,27 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpire: Date,
 });
 
+/******************************************************************************/
 
+// It will bcrypt the password before saving to the database.
 userSchema.pre("save", async function (next) {    // we are not using arrow functions here, because it don't allow this keyword.
-    
-})
+    if(!this.isModified("password")) {
+        next();
+    }
+
+    this.password = await bcrypt.hash(this.password, 10);
+});
+
+/******************************************************************************/
+
+// JWT TOKEN
+// to create unique token i.e., credentials to the user based on the user _id
+userSchema.methods.getJWTToken = function () {
+    return jwt.sign( {id: this.id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE,
+    });
+};
+
+/******************************************************************************/
 
 module.exports = mongoose.model("User", userSchema);

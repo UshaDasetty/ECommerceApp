@@ -1,10 +1,16 @@
 const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorhandler');
 const catchAsyncErrors = require('../middleware/catchAsyncErrors');
-const ApiFeatures = require('../utils/apifeatures')
+const ApiFeatures = require('../utils/apifeatures');
+
+/******************************************************************************/
 
 //Create Product---> admin
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
+
+    // It will shows the user(admin) id that who created that product 
+    req.body.user = req.user.id;
+
     const product = await Product.create(req.body);
 
     res.status(201).json({
@@ -12,6 +18,8 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
         product       //displays product details
     });
 });
+
+/******************************************************************************/
 
 // getting all products
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
@@ -27,6 +35,8 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+/******************************************************************************/
+
 // get product details
 exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     let product = await Product.findById(req.params.id);
@@ -40,6 +50,8 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
         product
     });
 });
+
+/******************************************************************************/
 
 //Update Product---> admin
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
@@ -61,6 +73,8 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+/******************************************************************************/
+
 // Delete product---> admin
 exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
     let product = await Product.findById(req.params.id);
@@ -76,3 +90,5 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
         message: 'Product deleted successfully'
     });
 });
+
+/******************************************************************************/

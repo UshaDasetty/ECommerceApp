@@ -1,7 +1,7 @@
 # ECommerceApp
 ECommerce Application Using ReactJs, Redux, NodeJS, ExpressJs, MongoDB
 
-Clone this Repository
+Clone UserAuthentication branch
 
 # Install node_modules
 npm install

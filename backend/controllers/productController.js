@@ -91,4 +91,3 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
-/******************************************************************************/

@@ -8,6 +8,7 @@ const crypto = require('crypto');
 /******************************************************************************/
 
 // Register a User 
+
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     const { name, email, password } = req.body;
 
@@ -36,6 +37,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 /******************************************************************************/
 
 //Login User
+
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -75,6 +77,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 /******************************************************************************/
 
 // Logout User
+
 exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
 
     // It removes token from the cookie, which means that the user is logged out
@@ -93,6 +96,7 @@ exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
 /******************************************************************************/
 
 // Forgot Password
+
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     // We have to find the user email whom want to reset the password
@@ -178,3 +182,55 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
     sendToken(user, 200, res);
 
 });
+
+
+
+
+/******************************************************************************/
+/******************************************************************************/
+
+// Get User details 
+
+exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
+
+    // if user found
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        user,
+    })
+});
+
+/******************************************************************************/
+
+// update User password 
+
+exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
+
+    // It find user and selects password to update password
+    const user = await User.findById(req.user.id).select("+password");
+
+    // It compares the Entered password with old Password
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+    // If password is not matched with old password
+    if(!isPasswordMatched) {
+        return next(new ErrorHandler("Old Password is Incorrect", 400));
+    }
+
+    // if new password and confirm password is not same
+    if(req.body.newPassword !== req.body.confirmPassword) {
+        return next(new ErrorHandler("Password does not match", 400));
+    }
+
+    // if new password and confirm password is same, it update password with new password
+    user.password = req.body.newPassword;
+
+    // saves updated password(user) to database
+    await user.save();
+
+    sendToken(user, 200, res);
+});
+
+/******************************************************************************/
